@@ -1,0 +1,135 @@
+{
+	"info": {
+		"_postman_id": "3ebcccf1-5e6a-420b-9e6a-d22bb5cd1b6f",
+		"name": "User Create Store Item & Copy",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "/register Copy Copy",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "04331309-465b-4bc6-8f43-aafe0de813fc",
+						"type": "text/javascript",
+						"exec": [
+							"postman.clearEnvironmentVariable(\"access_token\");",
+							"",
+							"tests[\"Response time is less than 200s\"] = responseTime < 200;",
+							"",
+							"var jsonData =  JSON.parse(responseBody);",
+							"",
+							"tests[\"User created successfully\"] =  jsonData.message === \"User created\";",
+							"",
+							"tests[\"Content-Type is present in response\"] = postman.getResponseHeader('Content-Type');",
+							"tests[\"Content-Type is application/json\"] = postman.getResponseHeader('Content-Type') === \"application/json\";",
+							"",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"username\":\"jose4\",\n\t\"password\":\"asdf\"\n}"
+				},
+				"url": "{{url}}/register"
+			},
+			"response": []
+		},
+		{
+			"name": "/store/<name> Copy",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "829b0cc7-aaf2-4017-b56c-a945a5b5a352",
+						"type": "text/javascript",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"tests[\"store name is returned\"] = jsonData.name === \"test_store\";",
+							"tests[\"store id is returned\"] = jsonData.id === 1;",
+							"tests[\"store items are an empty list\"] = jsonData.items.lengh === 0;",
+							"",
+							"tests[\"Successful post request\"] = responseCode === 201;",
+							"tests[\"Response time is <200ms\"] = responseCode < 200;",
+							"",
+							"tests['Content-Type is present'] = postman.getResponseHeader(\"Content-Type\");",
+							"tests['Content-Type is application/json'] = postman.getResponseHeader(\"Content-Type\") === \"application/json\";",
+							"",
+							"postman.setEnvironmentVariable(\"store_id\", jsonData.id);",
+							"",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"store_id\":1,\n\t\"price\": 15.99\n}"
+				},
+				"url": "{{url}}/store/test_store",
+				"description": "This will create a store. If the store already exists, this will fail."
+			},
+			"response": []
+		},
+		{
+			"name": "/auth Copy Copy",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "8867ff76-f57e-45a0-b3b0-e4749acf605b",
+						"type": "text/javascript",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"tests[\"Access token was not empty\"] =jsonData.access_token !== undefined;",
+							"",
+							"postman.setEnvironmentVariable(\"jwt_token\",jsonData.access_token);",
+							"",
+							"tests[\"Status code is 200\"] = responseCode.code === 200;",
+							"",
+							"tests[\"Body contains access token\"] = responseBody.has(\"access_token\");",
+							"",
+							"tests[\"Response time is less than 150ms\"] = responseTime < 150;",
+							"",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"username\":\"jose4\",\n\t\"password\":\"asdf\"\n}"
+				},
+				"url": "{{url}}/auth"
+			},
+			"response": []
+		}
+	]
+}
